@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#204f45" />
+    <title>Delhi Malayali World</title>
+  </head>
+  <body>
+    <canvas id="world" aria-label="Third-person 3D neighborhood"></canvas>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Delhi Malayali World home"><span class="brand-icon">dm<span>·</span></span><span>DELHI MALAYALI<br><strong>WORLD</strong></span></a>
+      <div class="phase"><span></span> <span id="connection-status">COMMUNITY PREVIEW</span></div>
+    </header>
+    <main id="welcome" class="welcome">
+      <div class="eyebrow"><span></span> A LITTLE DELHI. A LITTLE HOME.</div>
+      <h1>Your people.<br>Your <em>little world.</em></h1>
+      <p>Meet. Explore. Connect.<br>A tiny Delhi, with a touch of Kerala.</p>
+      <form id="login-form">
+        <label for="display-name">Display name</label><input id="display-name" name="name" maxlength="24" required autocomplete="nickname" placeholder="What should we call you?" />
+        <label for="hometown">Kerala hometown / district</label><select id="hometown" name="hometown"><option value="">Prefer not to show hometown</option></select>
+        <label for="avatar">Avatar</label><select id="avatar" name="avatar"><option value="male">Male</option><option value="female">Female</option></select>
+        <button id="start" class="primary" type="submit">ENTER WORLD <span>↗</span></button>
+      </form>
+      <div class="preview-note">GUEST ACCESS <span>·</span> No account needed</div>
+      <div class="welcome-footer"><span>നമുക്ക് കാണാം</span><span>Meet. Explore. Connect.</span></div>
+    </main>
+    <div id="tags" aria-hidden="true"></div>
+    <section id="hud" class="hidden" aria-label="Game controls">
+      <div class="location panel"><span class="location-dot">⌖</span><div><small>YOU ARE EXPLORING</small><strong id="location-name">Community Park</strong></div></div>
+      <div id="community-buttons"><button id="online-button" class="panel">ONLINE 0</button><button id="map-button" class="panel">Map</button><button id="teleport-button" class="panel" aria-expanded="false" aria-controls="teleport-panel">Teleport</button></div><aside id="online-panel" class="panel hidden" aria-label="Online neighbors"><h3>Neighbors in Delhi</h3><div id="online-users"></div><small>Mute and block last for this connection.</small></aside><aside id="map-panel" class="panel"><canvas id="minimap" width="210" height="210" aria-label="Landmark map: Gate west, CP northwest, Market and Fort north, Metro east, Park central"></canvas><small>Your virtual world · Orange marker = you</small></aside>
+      <aside id="teleport-panel" class="panel hidden" aria-label="Teleport to a landmark"><header><strong>Where shall we go?</strong><button id="teleport-close" aria-label="Close teleport menu">×</button></header><div id="teleport-destinations"></div><small>Arrive on foot. Your vehicle stays behind.</small><p id="teleport-status" role="status"></p></aside>
+      <button id="menu" class="menu panel" aria-label="Open menu">☰</button>
+      <div id="joystick" role="group" aria-label="Movement joystick"><span id="joystick-knob"></span></div><button id="mobile-chat" class="panel" aria-label="Open nearby chat">Chat</button><span id="camera-hint">Drag here to look</span>
+      <div id="interactions"><button id="talk" class="primary" hidden>E · TALK</button><button id="drive" class="primary" hidden>F · DRIVE</button></div>
+      <section id="chat" class="panel hidden" aria-label="Proximity chat"><header><strong id="chat-title">Nearby chat</strong><button id="chat-close" aria-label="Close chat">×</button></header><div id="chat-log" role="log" aria-live="polite"></div><form id="chat-form"><input id="chat-input" aria-label="Message" placeholder="Say hello…" maxlength="280" autocomplete="off"/><button id="chat-send">Send</button></form><small>Only while you’re nearby · Enter to type</small></section>
+      <div class="controls panel"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Walk</span><i></i><span><kbd>SHIFT</kbd> Run</span><i></i><span>Drag to look</span><i></i><span><kbd>ESC</kbd> Menu</span></div>
+      <div class="world-caption">DELHI, REIMAGINED <span>A WORLD OF OUR OWN</span></div>
+      <div id="hint" role="status">Welcome to Delhi Malayali World. Make yourself at home.</div>
+    </section>
+    <section id="pause" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="pause-title"><div class="panel"><div class="eyebrow">TAKE YOUR TIME</div><h2 id="pause-title">A little breather.</h2><p>WASD or arrow keys to walk. Hold Shift to run.<br>Drag the scene to look around. Scroll to zoom.</p><div id="settings"><label for="settings-avatar">Avatar</label><select id="settings-avatar"><option value="male">Male</option><option value="female">Female</option></select><label><input type="checkbox" id="touch-controls" /> Touch controls</label><label><input type="checkbox" id="showName" checked /> Show Display Name</label><label><input type="checkbox" id="showHometown" checked /> Show Kerala Hometown</label><label><input type="checkbox" id="allowTalk" checked /> Allow Talk Requests</label><label><input type="checkbox" id="sound" /> Sound On</label><button id="save-settings" type="button">Save settings</button><p id="settings-status" role="status"></p><small>No live location, phone number, or email is collected.</small></div><button id="reconnect" type="button">Reconnect to world</button><button id="resume" class="primary">Back to exploring <span>↗</span></button></div></section>
+    <section id="report-panel" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="report-title"><form id="report-form" class="panel"><h2 id="report-title">Report User</h2><label for="report-reason">What happened?</label><textarea id="report-reason" maxlength="500" required rows="4"></textarea><p id="report-status" role="status"></p><button type="submit" class="primary">Save report</button><button id="report-cancel" type="button">Close</button></form></section>
+    <div id="error" class="modal hidden" role="alert"><div class="panel"><h2>We couldn’t open the world.</h2><p>Please try a modern browser with WebGL enabled.</p></div></div>
+    <script type="module" src="/client/src/main.ts"></script>
+  </body>
+</html>

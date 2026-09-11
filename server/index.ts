@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { registerModeration } from './Moderation.js';
 import { VehicleManager } from './VehicleManager.js';
 import { ChatManager } from './ChatManager.js';
@@ -40,12 +41,36 @@ const movementCredit = new Map<string, number>();
 const lastMove = new Map<string, number>();
 app.get('/health', (_req, res) => res.json({ ok: true, players: players.size }));
 
-const distPath = path.resolve(process.cwd(), 'dist');
-if (fs.existsSync(distPath)) {
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const possibleDistPaths = [
+  path.resolve(process.cwd(), 'dist'),
+  path.resolve(__dirname, '../../dist'),
+  path.resolve(__dirname, '../dist'),
+  path.resolve(__dirname, 'dist'),
+];
+const distPath = possibleDistPaths.find(p => fs.existsSync(p) && fs.existsSync(path.join(p, 'index.html')));
+
+if (distPath) {
   app.use(express.static(distPath));
   app.use((req, res, next) => {
     if (req.method !== 'GET' || req.path.startsWith('/api') || req.path === '/health') return next();
     res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  console.warn('Frontend dist not found at any of:', possibleDistPaths);
+  app.get('/', (_req, res) => {
+    res.status(200).send(`
+      <!DOCTYPE html>
+      <html>
+        <head><title>Delhi Malayali World Server</title></head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a423a; color: #fff; text-align: center; padding: 60px 20px;">
+          <h1 style="color: #f5c338; font-size: 28px;">Delhi Malayali World Server is Running!</h1>
+          <p style="font-size: 18px; line-height: 1.6;">The multiplayer WebSocket server is healthy and accepting connections.</p>
+          <p style="color: #d1dfdb; max-width: 600px; margin: 20px auto;">If you are seeing this page, the server is running without the pre-built frontend bundle. Please ensure <code>npm run build</code> runs during deployment.</p>
+          <p style="margin-top: 30px;"><a href="/health" style="display: inline-block; background: #f5c338; color: #1a423a; font-weight: bold; padding: 12px 24px; border-radius: 8px; text-decoration: none;">View /health JSON</a></p>
+        </body>
+      </html>
+    `);
   });
 }
 const publicPlayer = (p: PlayerState): PlayerState => ({ ...p, name: p.showName ? p.name : '', hometown: p.showHometown ? p.hometown : '' });

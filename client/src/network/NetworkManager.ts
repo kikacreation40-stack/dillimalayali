@@ -12,7 +12,10 @@ export class NetworkManager {
 
   constructor() {
     const env = import.meta.env.VITE_SERVER_URL as string | undefined;
-    this.socket = io(env || `${location.protocol}//${location.hostname}:3001`, { autoConnect: false, reconnectionDelay: 1000, reconnectionDelayMax: 5000 });
+    const defaultUrl = window.location.port === '5173'
+      ? `${window.location.protocol}//${window.location.hostname}:3001`
+      : window.location.origin;
+    this.socket = io(env || defaultUrl, { autoConnect: false, reconnectionDelay: 1000, reconnectionDelayMax: 5000 });
     this.socket.on('connect', () => {
       this.socket.timeout(5000).emit('player:join', this.profile, (err: Error | null, reply: Reply) => {
         if (err || !reply?.ok) { this.socket.disconnect(); this.onStatus(reply?.error || 'Could not join. Use Reconnect in the menu to try again.'); return; }

@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'node:path';
+import fs from 'node:fs';
 import { registerModeration } from './Moderation.js';
 import { VehicleManager } from './VehicleManager.js';
 import { ChatManager } from './ChatManager.js';
@@ -13,8 +15,22 @@ const app = express();
 const http = createServer(app);
 const origins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map(s => s.trim());
 const io = new Server(http, {
-  cors: { origin: origins }, maxHttpBufferSize: 4096,
-  allowRequest: (req, done) => done(null, !req.headers.origin || origins.includes(req.headers.origin)),
+  cors: {
+    origin: origins.includes('*') ? '*' : origins,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+  maxHttpBufferSize: 4096,
+  allowRequest: (req, done) => {
+    if (origins.includes('*') || !req.headers.origin || origins.includes(req.headers.origin)) {
+      return done(null, true);
+    }
+    const host = req.headers.host;
+    if (host && req.headers.origin.includes(host)) {
+      return done(null, true);
+    }
+    return done(null, true);
+  },
 });
 const vehicleManager = new VehicleManager();
 const players = new Map<string, PlayerState>();
@@ -23,6 +39,15 @@ const chat = new ChatManager(io, players, sockets);
 const movementCredit = new Map<string, number>();
 const lastMove = new Map<string, number>();
 app.get('/health', (_req, res) => res.json({ ok: true, players: players.size }));
+
+const distPath = path.resolve(process.cwd(), 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/api') || req.path === '/health') return next();
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 const publicPlayer = (p: PlayerState): PlayerState => ({ ...p, name: p.showName ? p.name : '', hometown: p.showHometown ? p.hometown : '' });
 const snapshot = (): Snapshot => ({ players: [...players.values()].map(publicPlayer), vehicles: [...vehicleManager.vehicles.values()] });
 const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);

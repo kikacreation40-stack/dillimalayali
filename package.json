@@ -10,6 +10,7 @@
     "preview": "vite preview --host 0.0.0.0",
     "server:dev": "node --env-file-if-exists=.env --watch --import tsx server/index.ts",
     "server": "node --env-file-if-exists=.env dist-server/server/index.js",
+    "start": "npm run server",
     "test": "node --import tsx --test tests/*.test.mjs"
   },
   "dependencies": {

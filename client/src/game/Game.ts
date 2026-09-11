@@ -1,4 +1,4 @@
-import { CircleGeometry, Mesh, MeshBasicMaterial, PerspectiveCamera, WebGLRenderer } from 'three';
+import { ACESFilmicToneMapping, CircleGeometry, Mesh, MeshBasicMaterial, PCFSoftShadowMap, PerspectiveCamera, WebGLRenderer } from 'three';
 import { CameraController } from './CameraController';
 import { CharacterController } from './CharacterController';
 import { Player } from './Player';
@@ -47,9 +47,13 @@ export class Game {
 
   constructor(canvas: HTMLCanvasElement) {
     this.controller.mobile = this.mobile.axes;
-    this.renderer = new WebGLRenderer({ canvas, antialias: devicePixelRatio < 2, powerPreference: 'high-performance' });
-    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+    this.renderer = new WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
     this.renderer.setSize(innerWidth, innerHeight);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = PCFSoftShadowMap;
+    this.renderer.toneMapping = ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.06;
     this.cameraController = new CameraController(this.camera, canvas, this.world.collision);
     this.world.scene.add(this.player.mesh);
     const shadow = new Mesh(new CircleGeometry(0.65, 16), new MeshBasicMaterial({ color: 0x34493c, opacity: 0.18, transparent: true, depthWrite: false }));

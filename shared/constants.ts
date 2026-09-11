@@ -13,6 +13,10 @@ export const LANDMARKS = [
   { id: 'CHANDNI_CHOWK', name: 'Chandni Chowk', short: 'Market', x: 65, z: -180, radius: 38 },
   { id: 'RED_FORT', name: 'Red Fort', short: 'Fort', x: 220, z: -190, radius: 42 },
   { id: 'METRO', name: 'Delhi Metro', short: 'Metro', x: 180, z: 70, radius: 36 },
+  { id: 'QUTUB_MINAR', name: 'Qutub Minar', short: 'Qutub', x: -70, z: 175, radius: 40 },
+  { id: 'LOTUS_TEMPLE', name: 'Lotus Temple', short: 'Lotus', x: 90, z: 185, radius: 40 },
+  { id: 'RASHTRAPATI_BHAVAN', name: 'Rashtrapati Bhavan', short: 'Palace', x: -230, z: -25, radius: 42 },
+  { id: 'DILLI_HAAT', name: 'Dilli Haat', short: 'Haat', x: 70, z: 30, radius: 36 },
 ];
 export function zoneAt(x: number, z: number): string {
   return LANDMARKS.find(l => Math.hypot(x - l.x, z - l.z) < l.radius)?.id ?? 'CENTRAL_AVENUE';
@@ -25,4 +29,8 @@ export const TELEPORT_SPAWNS: Record<string, { x: number; z: number; rotation: n
   CHANDNI_CHOWK: { x: 65, z: -180, rotation: Math.PI },
   RED_FORT: { x: 220, z: -177, rotation: Math.PI },
   METRO: { x: 180, z: 62, rotation: 0 },
+  QUTUB_MINAR: { x: -70, z: 156, rotation: 0 },
+  LOTUS_TEMPLE: { x: 90, z: 165, rotation: 0 },
+  RASHTRAPATI_BHAVAN: { x: -230, z: -2, rotation: Math.PI },
+  DILLI_HAAT: { x: 70, z: 16, rotation: 0 },
 };
